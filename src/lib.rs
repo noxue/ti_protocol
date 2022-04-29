@@ -100,11 +100,16 @@ impl TiPack for Packet {
 /// 获取数据
 #[derive(Serialize, Deserialize, PartialEq, Debug, TiPack, TiUnPack)]
 pub struct Task {
-    pub task_id: i32,         // 任务id，随机生成
+    pub task_id: i32,         // 任务id，随机生成， 如果task_id=0 表示没有任务
     pub product_name: String, // 产品名
 }
 
 impl Task {
+    // 根据task_id判断是否有任务
+    pub fn has_task(&self) -> bool {
+        self.task_id != 0
+    }
+
     pub fn new(task_id: i32, product_name: String) -> Task {
         Task {
             task_id,
@@ -116,15 +121,22 @@ impl Task {
 /// worker执行完任务后返回执行结果
 #[derive(Serialize, Deserialize, PartialEq, Debug, TiPack, TiUnPack)]
 pub struct TaskResult {
-    pub task_id: i32,                // 任务id
-    pub result: Result<i32, String>, // 执行结果
+    pub task_id: i32,                         // 任务id
+    pub result: Result<i32, TaskResultError>, // 执行结果
 }
 
 // new
 impl TaskResult {
-    pub fn new(task_id: i32, result: Result<i32, String>) -> TaskResult {
+    pub fn new(task_id: i32, result: Result<i32, TaskResultError>) -> TaskResult {
         TaskResult { task_id, result }
     }
+}
+
+// 任务结果失败类型
+#[derive(Serialize, Deserialize, PartialEq, Debug, TiPack, TiUnPack)]
+pub enum TaskResultError {
+    AccessDenied, // 无法访问
+    Banned,       // 被封禁
 }
 
 #[cfg(test)]
