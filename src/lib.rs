@@ -42,8 +42,9 @@ pub fn get_header_size() -> usize {
 /// 数据包类型
 #[derive(Debug, PartialEq, Serialize, Deserialize)]
 pub enum PackType {
-    Task,
-    TaskResult,
+    GetTask,    // 获取任务
+    Task,       // 返回任务
+    TaskResult, // 返回任务结果
 }
 
 /// 数据头
@@ -86,6 +87,13 @@ impl Packet {
             header: PacketHeader::new(data.len() as u64, data_type),
             data,
         })
+    }
+
+    pub fn new_without_data(data_type: PackType) -> Packet {
+        Packet {
+            header: PacketHeader::new(0, data_type),
+            data: Vec::new(),
+        }
     }
 }
 
