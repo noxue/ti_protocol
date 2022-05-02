@@ -143,8 +143,10 @@ impl TaskResult {
 // 任务结果失败类型
 #[derive(Serialize, Deserialize, PartialEq, Debug, TiPack, TiUnPack)]
 pub enum TaskResultError {
-    AccessDenied, // 无法访问
-    Banned,       // 被封禁
+    AccessDenied,    // 无法访问
+    Banned,          // 被封禁
+    ProductNotFound, // 产品不存在
+    Timeout,         // 超时
 }
 
 #[cfg(test)]
